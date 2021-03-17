@@ -239,13 +239,54 @@ def create_venue_form():
 def create_venue_submission():
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-
-  # on successful db insert, flash success
-  flash('Venue ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
+  error = False
+  data = {}
+  form = VenueForm()
+  try:
+    data = {
+      'name': form['name'].data,
+      'city': form['city'].data,
+      'state': form['state'].data,
+      'address': form['address'].data,
+      'phone': form['phone'].data,
+      'image_link':form['image_link'].data,
+      'facebook_link': form['facebook_link'].data,
+      'genres': form['genres'].data,
+      'website': form['website'].data,
+      'seeking_talent': form['seeking_talent'].data,
+      'seeking_desc': form['seeking_desc'].data
+  }
+    venue = Venue(
+      name=data['name'],
+      city=data['city'],
+      state=data['state'],
+      address=data['address'],
+      phone=data['phone'],
+      image_link=data['image_link'],
+      facebook_link=data['facebook_link'],
+      genres=data['genres'],
+      website=data['website'],
+      seeking_talent=data['seeking_talent'],
+      seeking_desc=data['seeking_desc']
+    )
+    db.session.add(venue)
+    db.session.commit()
+  except():
+    db.session.rollback()
+    error = True
+  finally:
+    db.session.close()
+    if error:
+      # TODO: on unsuccessful db insert, flash an error instead.
+      flash('An error occurred. Venue ' + data['name'] + ' could not be listed.')
+    else:
+      # on successful db insert, flash success
+      flash('Venue ' + request.form['name'] + ' was successfully listed!')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
   return render_template('pages/home.html')
+
+
+  
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
