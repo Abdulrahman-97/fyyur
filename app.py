@@ -252,7 +252,7 @@ def create_venue_submission():
     )
     db.session.add(venue)
     db.session.commit()
-  except():
+  except:
     db.session.rollback()
     error = True
   finally:
@@ -398,7 +398,7 @@ def edit_artist_submission(artist_id):
     artist.seeking_desc = form.seeking_desc.data
 
     db.session.commit()
-  except():
+  except:
     db.session.rollback()
     error = True
   finally:
@@ -451,7 +451,7 @@ def edit_venue_submission(venue_id):
     venue.seeking_desc = form.seeking_desc.data
 
     db.session.commit()
-  except():
+  except:
     db.session.rollback()
     error = True
   finally:
@@ -507,7 +507,7 @@ def create_artist_submission():
     )
     db.session.add(artist)
     db.session.commit()
-  except():
+  except:
     db.session.rollback()
     error = True
   finally:
@@ -528,6 +528,7 @@ def create_artist_submission():
 @app.route('/shows')
 def shows():
   # displays list of shows at /shows
+  # query shows information 
   shows = db.session.query(Venue.id, Venue.name, Artist.id, Artist.name, Artist.image_link, Show.start_time)\
                     .join(Venue, Venue.id == Show.venue_id).join(Artist, Artist.id == Show.artist_id).all()
   data = []
@@ -562,7 +563,7 @@ def create_show_submission():
     )
     db.session.add(show)
     db.session.commit()
-  except():
+  except:
     db.session.rollback()
     error = True
   finally:
