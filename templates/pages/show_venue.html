@@ -1,8 +1,9 @@
 {% extends 'layouts/main.html' %}
 {% block title %}Venue Search{% endblock %}
 {% block content %}
+<div class="container">
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-5">
 		<h1 class="monospace">
 			{{ venue.name }}
 		</h1>
@@ -42,9 +43,21 @@
 		</p>
 		{% endif %}
 	</div>
+	<div class="col-sm-1">
+		<a href="/venues/{{ venue.id }}/edit">
+			<button type="button" class="btn btn-primary btn-lg btn-block">
+				Edit
+			</button>
+		</a>
+		<br>
+		<button class="btn btn-danger" id="delete_venue" data-id="{{ venue.id }}">
+			Delete
+		</button>
+	</div>
 	<div class="col-sm-6">
 		<img src="{{ venue.image_link }}" alt="Venue Image" />
 	</div>
+</div>
 </div>
 <section>
 	<h2 class="monospace">{{ venue.upcoming_shows_count }} Upcoming {% if venue.upcoming_shows_count == 1 %}Show{% else %}Shows{% endif %}</h2>
@@ -74,13 +87,19 @@
 		{% endfor %}
 	</div>
 </section>
-<div class="col-sm-6">
-	<a href="/venues/{{ venue.id }}/edit">
-		<div class="btn btn-primary btn-lg btn-block">
-			<h3>Edit</h3>
-		</div>
-	</a>
-</div>
-
+<script>
+	document.getElementById('delete_venue')
+	.onclick = function(e) {
+	  const venue_id = e.target.dataset['id']
+	  fetch('/venues/' + venue_id, {
+		method: 'DELETE',
+	  }).then(res => {
+		console.log(res)  
+		if (res.ok){
+		window.location.href = '/';
+	  }})
+					
+	}
+  </script>
 {% endblock %}
 

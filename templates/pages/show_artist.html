@@ -2,7 +2,7 @@
 {% block title %}{{ artist.name }} | Artist{% endblock %}
 {% block content %}
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-sm-5">
 		<h1 class="monospace">
 			{{ artist.name }}
 		</h1>
@@ -39,6 +39,13 @@
 		</p>
 		{% endif %}
 	</div>
+	<div class="col-sm-1">
+		<a href="/artists/{{ artist.id }}/edit">
+			<button type="button" class="btn btn-primary btn-lg btn-block">
+				Edit
+			</button>
+		</a>
+	</div>
 	<div class="col-sm-6">
 		<img src="{{ artist.image_link }}" alt="Venue Image" />
 	</div>
@@ -71,12 +78,5 @@
 		{% endfor %}
 	</div>
 </section>
-<div class="col-sm-6">
-	<a href="/artists/{{ artist.id }}/edit">
-		<div class="btn btn-primary btn-lg btn-block">
-			<h3>Edit</h3>
-		</div>
-	</a>
-</div>
 {% endblock %}
 

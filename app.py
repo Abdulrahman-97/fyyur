@@ -45,15 +45,15 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_desc = db.Column(db.String(500))
     shows = db.relationship('Show', backref='venue', lazy=True)
-    
 
+    
     def get_past_shows(self):
       past_shows = []
       for show in self.shows:
         if show.start_time <= current_date:
           past_shows.append(show)
       return past_shows
-
+    
     def get_upcoming_shows(self):
       upcoming_shows = []
       for show in self.shows:
@@ -141,7 +141,7 @@ def venues():
   data = []
   # query venues ordered by city ascending
   venues = db.session.query(Venue).order_by(Venue.city.asc()).all()
-  
+
   city = venues[0].city # first city
   state = venues[0].state # first state
   venues_list = []
@@ -201,7 +201,7 @@ def show_venue(venue_id):
   # get past shows and upcoming shows info
   past_shows = venue.get_past_shows()
   upcoming_shows = venue.get_upcoming_shows()
-
+  
 
   past_shows_list = []
   for show in past_shows:
@@ -290,10 +290,23 @@ def create_venue_submission():
 def delete_venue(venue_id):
   # TODO: Complete this endpoint for taking a venue_id, and using
   # SQLAlchemy ORM to delete a record. Handle cases where the session commit could fail.
-
+  error = False
+  try:
+      venue = Venue.query.get(venue_id)
+      db.session.delete(venue)
+      db.session.commit()
+  except:
+      db.session.rollback()
+      error = True
+  finally:
+      db.session.close()
+  if error:
+      flash(f'An error occurred. Venue {venue.name} could not be deleted.')
+  else:
+      flash(f'Venue {venue.name} was successfully deleted!')
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
-  return None
+  return redirect(url_for('index'), code=200)
 
 #  Artists
 #  ----------------------------------------------------------------
